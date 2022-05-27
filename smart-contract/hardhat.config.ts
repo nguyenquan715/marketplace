@@ -27,8 +27,12 @@ const config = {
   networks: {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    mumbai: {
+      url: process.env.MUMBAI_URL || "",
+      chainId: 80001,
+      accounts: [process.env.PRIVATE_KEY_WALLET],
     },
   },
   gasReporter: {
@@ -36,7 +40,9 @@ const config = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      polygonMumbai: process.env.MUMBAI_API_KEY,
+    },
   },
 };
 
