@@ -29,10 +29,20 @@ const connectWallet = async () => {
   }
 }
 
-const requestAccount = async () => {
-  return window.ethereum.request({
-    method: "wallet_requestPermissions",
-    params: [{ eth_accounts: {} }]
+const handleWalletEvent = () => {
+  if (!checkWalletInstalled()) return;
+  window.ethereum.on('accountsChanged', async (accounts) => {
+    window.location.reload();
+  });
+  
+  window.ethereum.on('chainChanged', async (chainId) => {
+    if (await checkEthereumChain('0x13881')) return;
+    if (confirm("You must switch to Mumbai network!")) {
+      await switchEthereumChain('0x13881', 'Mumbai', 'https://rpc-mumbai.matic.today');
+    } else {
+      alert("You are in wrong network!");
+    }
+    window.location.reload();
   });
 }
 
