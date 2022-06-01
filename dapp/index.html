@@ -9,6 +9,7 @@
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
 
   <body>
@@ -95,53 +96,20 @@
       <div class="row">
         <div class="section col-12">
           <h3 class="section-title">My NFTs</h3>
-          <div class="section-content section-horizontal">
-            <div class="item-info">
-              <div class="item-info-top">
-                <img src="./public/assets/images/yasuo.jpg" alt="img">
-              </div>
-              <div class="item-info-bottom">
-                <h4 class="item-name">Yasuo</h4>
-                <p class="item-describe">A man with sword, live by the sword, die by the sword</p>
-                <button class="item-click">Select</button>
-              </div>
-            </div>
-            <div class="item-info">
-              <div class="item-info-top">
-                <img src="./public/assets/images/zed.jpg" alt="img">
-              </div>
-              <div class="item-info-bottom">
-                <h4 class="item-name">Yasuo</h4>
-                <p class="item-describe">A man with sword, live by the sword, die by the sword</p>
-                <button class="item-click">Select</button>
-              </div>
-            </div>
-            <div class="item-info">
-              <div class="item-info-top">
-                <img src="./public/assets/images/leesin.jpg" alt="img">
-              </div>
-              <div class="item-info-bottom">
-                <h4 class="item-name">Yasuo</h4>
-                <p class="item-describe">A man with sword, live by the sword, die by the sword</p>
-                <button class="item-click">Select</button>
-              </div>
-            </div>
-            <div class="item-info">
-              <div class="item-info-top">
-                <img src="./public/assets/images/zed.jpg" alt="img">
-              </div>
-              <div class="item-info-bottom">
-                <h4 class="item-name">Yasuo</h4>
-                <p class="item-describe">A man with sword, live by the sword, die by the sword</p>
-                <button class="item-click">Select</button>
-              </div>
-            </div>
+          <h3 class="section-quantity">
+            <span>Total: </span>
+            <span id="nft-quantity">0</span>
+          </h3>
+          <div class="section-content section-horizontal" id="my-nfts">
+            
           </div>
         </div>
       </div>
     </div>
+    <script type="text/javascript" src="./public/scripts/constant.js"></script>
     <script type="text/javascript" src="./public/scripts/wallet-interaction.js"></script>
     <script type="text/javascript" src="./public/scripts/ether-service.js"></script>
+    <script type="text/javascript" src="./public/scripts/moralis-service.js"></script>
     <script type="text/javascript" src="./public/scripts/main.js"></script>
   </body>
 </html>

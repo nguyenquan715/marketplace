@@ -76,6 +76,9 @@
         color: white;
         font-size: 20px;
       }
+      .section-quantity {
+        padding: 10px;
+      }
       .section-vertical {
         display: flex;
         flex-direction: column;
@@ -111,13 +114,12 @@
       .section-horizontal {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
         height: 500px;
         overflow: auto;
         .item-info {
           background-color: @section-secondary-theme;
           width: 32%;
-          height: 320px;
+          height: 280px;
           overflow: auto;
           margin: 5px;
           display: flex;
@@ -135,6 +137,7 @@
           .item-info-bottom {
             border-top: 0.5px dashed rgb(223, 200, 236);
             margin-top: 10px;
+            width: 100%;
             .item-name {
               margin-top: 10px;
               margin-bottom: 10px;

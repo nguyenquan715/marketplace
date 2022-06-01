@@ -76,13 +76,17 @@ const switchEthereumChain = async (chainId, chainName, chainRpc) => {
       params: [{ chainId }]
     });
   } catch (err) {
+    if (err.code === 4001) {
+      alert("You must switch to Mumbai network!");
+      return;
+    }
     if (err.code === 4902) {
       await addEthereumChain(chainId, chainName, chainRpc).catch((err) => {
         throw err;
       });
-    } else {
-      throw err;
+      return;
     }
+    throw err;
   }
 }
 
