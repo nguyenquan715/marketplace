@@ -7,3 +7,7 @@ const getAddressBalance = async (address) => {
 function getPriceFromBN(price) {
   return ethers.BigNumber.isBigNumber(price) ? ethers.utils.formatEther(price) : price;
 }
+
+function getPriceBNFromStr(str) {
+  return ethers.utils.parseEther(str);
+}

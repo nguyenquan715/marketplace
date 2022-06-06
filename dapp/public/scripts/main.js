@@ -66,6 +66,62 @@ async function displayMyNfts() {
   }
 }
 
+function handleMyNftClick(index) {
+  console.log(myNfts[index]);
+  nftSelectedField.innerHTML = "";
+  nftSelectedField.innerHTML = `
+    <div class="item-selected">
+      <div class="item-detail-top">
+        <img src=${myNftMetadatas[index]["image"]} alt="img" onerror="handleLoadImageError(event)">          
+      </div>
+      <div class="item-detail-mid">
+        <h2>ABOUT</h2>
+        <div class="item-detail-group">
+          <div class="item-detail-content">
+            <h5 class="item-detail-key">Item Name</h5>
+            <p class="item-detail-value">${myNftMetadatas[index]["name"] || "No Name"}</p>
+          </div>
+          <div class="item-detail-content">
+            <h5 class="item-detail-key">Token ID</h5>
+            <p class="item-detail-value">${myNfts[index]["token_id"]}</p>
+          </div>
+          <div class="item-detail-content">
+            <h5 class="item-detail-key">Contract Address</h5>
+            <p class="item-detail-value">${myNfts[index]["token_address"]}</p>
+          </div>
+          <div class="item-detail-content">
+            <h5 class="item-detail-key">Description</h5>
+            <p class="item-detail-value">${myNftMetadatas[index]["description"] || "No Description"}</p>
+          </div>
+        </div>
+      </div>
+      <div class="item-detail-bot">
+        <input type="text" id="item-price" placeholder="Enter price">
+        <button id="sell-item" onclick="handleSellNftClick(${index})">Sell</button>
+      </div>
+    </div>
+  `;
+}
+/**
+ * Sell NFT item
+ */
+async function handleSellNftClick(index) {
+  const tokenId = Number(myNfts[index]["token_id"]);
+  const tokenAddress = myNfts[index]["token_address"]
+  const nftAbi = (await getContractAbi(tokenAddress))["data"]["result"];
+  console.log(nftAbi);
+  const price = document.getElementById("item-price").value;
+  if (!Number(price)) {
+    alert('Invalid price');
+    return;
+  }
+  const signer = provider.getSigner();
+  const marketplaceContract = new ethers.Contract(MARKETPLACE_CONTRACT_ADDRESS, MARKETPLACE_ABI, signer);
+  const tx = await marketplaceContract.sell(tokenId, tokenAddress, getPriceBNFromStr(price));
+  await tx.wait();
+  displayMyNfts();
+}
+
 /**
  * Helper function
  */
@@ -114,39 +170,6 @@ function handleLoadImageError(event) {
   return;
 }
 
-function handleMyNftClick(index) {
-  console.log(myNfts[index]);
-  nftSelectedField.innerHTML = "";
-  nftSelectedField.innerHTML = `
-    <div class="item-selected">
-      <div class="item-detail-top">
-        <img src=${myNftMetadatas[index]["image"]} alt="img" onerror="handleLoadImageError(event)">          
-      </div>
-      <div class="item-detail-mid">
-        <h2>ABOUT</h2>
-        <div class="item-detail-group">
-          <div class="item-detail-content">
-            <h5 class="item-detail-key">Item Name</h5>
-            <p class="item-detail-value">${myNftMetadatas[index]["name"] || "No Name"}</p>
-          </div>
-          <div class="item-detail-content">
-            <h5 class="item-detail-key">Token ID</h5>
-            <p class="item-detail-value">${myNfts[index]["token_id"]}</p>
-          </div>
-          <div class="item-detail-content">
-            <h5 class="item-detail-key">Contract Address</h5>
-            <p class="item-detail-value">${myNfts[index]["token_address"]}</p>
-          </div>
-          <div class="item-detail-content">
-            <h5 class="item-detail-key">Description</h5>
-            <p class="item-detail-value">${myNftMetadatas[index]["description"] || "No Description"}</p>
-          </div>
-        </div>
-      </div>
-      <div class="item-detail-bot">
-        <input type="text" id="item-price" placeholder="Enter price">
-        <button id="sell-item">Sell</button>
-      </div>
-    </div>
-  `;
+async function getContractAbi(ctAddress) {
+  return axios.get(`https://api-testnet.polygonscan.com/api?module=contract&action=getabi&address=${ctAddress}`);
 }
