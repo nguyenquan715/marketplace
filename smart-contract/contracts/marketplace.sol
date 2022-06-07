@@ -2,10 +2,11 @@
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
-contract Marketplace {
+contract Marketplace is ERC721Holder {
   event Sell(uint256 orderId, uint256 tokenId, address ctAddress, address seller, uint256 price, uint256 timeStamp);
   event Buy(uint256 orderId, uint256 tokenId, address ctAddress, address seller, address buyer, uint256 price, uint256 timeStamp);
   event Cancel(uint256 orderId, uint256 timeStamp);
