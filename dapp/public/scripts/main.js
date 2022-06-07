@@ -106,20 +106,33 @@ function handleMyNftClick(index) {
  * Sell NFT item
  */
 async function handleSellNftClick(index) {
-  const tokenId = Number(myNfts[index]["token_id"]);
-  const tokenAddress = myNfts[index]["token_address"]
-  const nftAbi = (await getContractAbi(tokenAddress))["data"]["result"];
-  console.log(nftAbi);
-  const price = document.getElementById("item-price").value;
-  if (!Number(price)) {
-    alert('Invalid price');
-    return;
+  try {
+    const tokenId = Number(myNfts[index]["token_id"]);
+    const tokenAddress = myNfts[index]["token_address"];
+    const owner = myNfts[index]["owner_of"];
+    const nftAbi = (await getContractAbi(tokenAddress))["data"]["result"];
+    const signer = provider.getSigner();
+    const nftContract = new ethers.Contract(tokenAddress, nftAbi, signer);
+    if (!await nftContract.isApprovedForAll(owner, MARKETPLACE_CONTRACT_ADDRESS)) {
+      console.log("Approve");
+      const tx = await nftContract.setApprovalForAll(MARKETPLACE_CONTRACT_ADDRESS, true);
+      await tx.wait();
+    }
+    console.log("Sell");
+    const price = document.getElementById("item-price").value;
+    if (!Number(price)) {
+      alert('Invalid price');
+      return;
+    }
+    const marketplaceContract = new ethers.Contract(MARKETPLACE_CONTRACT_ADDRESS, MARKETPLACE_ABI, signer);
+    const tx = await marketplaceContract.sell(tokenId, tokenAddress, getPriceBNFromStr(price));
+    tx.wait().then(() => {
+      nftSelectedField.innerHTML = "";
+      displayMyNfts();
+    }).catch((err) => console.log(err));
+  } catch (err) {
+    console.error(err);
   }
-  const signer = provider.getSigner();
-  const marketplaceContract = new ethers.Contract(MARKETPLACE_CONTRACT_ADDRESS, MARKETPLACE_ABI, signer);
-  const tx = await marketplaceContract.sell(tokenId, tokenAddress, getPriceBNFromStr(price));
-  await tx.wait();
-  displayMyNfts();
 }
 
 /**
